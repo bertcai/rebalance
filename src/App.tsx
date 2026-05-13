@@ -103,12 +103,14 @@ const palette = [
   "#ea580c",
 ];
 
-const initialHoldings: Holding[] = [
+const legacySampleHoldings: Holding[] = [
   { id: 1, name: "沪深300ETF", costPrice: 3.85, currentPrice: 4.12, quantity: 10000 },
   { id: 2, name: "中证500ETF", costPrice: 6.52, currentPrice: 5.89, quantity: 5000 },
   { id: 3, name: "纳斯达克ETF", costPrice: 1.85, currentPrice: 2.36, quantity: 20000 },
   { id: 4, name: "黄金ETF", costPrice: 5.12, currentPrice: 5.98, quantity: 8000 },
 ];
+
+const initialHoldings: Holding[] = [];
 
 const emptyForm = {
   name: "",
@@ -149,6 +151,25 @@ function isHolding(value: unknown): value is Holding {
 
 function getNextHoldingId(holdings: Holding[]) {
   return holdings.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+}
+
+function isSameHolding(left: Holding, right: Holding) {
+  return (
+    left.id === right.id &&
+    left.name === right.name &&
+    left.costPrice === right.costPrice &&
+    left.currentPrice === right.currentPrice &&
+    left.quantity === right.quantity
+  );
+}
+
+function isLegacySamplePortfolio(holdings: Holding[]) {
+  return (
+    holdings.length === legacySampleHoldings.length &&
+    holdings.every((holding, index) =>
+      isSameHolding(holding, legacySampleHoldings[index]),
+    )
+  );
 }
 
 function openPortfolioDb() {
@@ -195,6 +216,13 @@ async function readStoredPortfolio() {
     if (!stored || !Array.isArray(stored.holdings)) return null;
 
     const holdings = stored.holdings.filter(isHolding);
+
+    if (isLegacySamplePortfolio(holdings)) {
+      return {
+        holdings: initialHoldings,
+        nextId: 1,
+      };
+    }
 
     return {
       holdings,
@@ -265,7 +293,7 @@ function App() {
   const [theme, setTheme] = useState<ThemeMode>(() => getSystemTheme());
   const [page, setPage] = useState<PageMode>("dashboard");
   const [holdings, setHoldings] = useState<Holding[]>(initialHoldings);
-  const [nextId, setNextId] = useState(5);
+  const [nextId, setNextId] = useState(1);
   const [storageReady, setStorageReady] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -648,7 +676,7 @@ function UsageGuide({ onBack }: { onBack: () => void }) {
     {
       title: "录入持仓",
       content:
-        "页面初始的几个产品是示例数据。请先删除或编辑这些默认数据，再点击“添加持仓”录入自己的产品名称、成本单价、当前价格和持仓数量。",
+        "点击“添加持仓”录入自己的产品名称、成本单价、当前价格和持仓数量。页面不会预置示例持仓，避免和真实数据混淆。",
     },
     {
       title: "维护数据",
@@ -781,7 +809,7 @@ function UsageGuide({ onBack }: { onBack: () => void }) {
             你的持仓数据只会保存到当前浏览器本地的 IndexedDB，不会上传到服务器，也不会在不同设备或不同浏览器之间同步。
           </p>
           <p>
-            页面自带的沪深300ETF、中证500ETF、纳斯达克ETF、黄金ETF只是演示数据。正式使用前，请删除这些示例数据，或把它们改成你自己的真实持仓。
+            页面不会预置任何默认持仓。请从空列表开始录入自己的真实数据，避免把示例内容误认为个人资产。
           </p>
           <p>
             如果清理浏览器站点数据、使用无痕模式，或更换浏览器设备，本地保存的数据可能无法保留。
