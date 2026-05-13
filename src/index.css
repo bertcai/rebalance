@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --primary: 201 96% 32%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 94%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 94%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 166 68% 36%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 88%;
+    --input: 214 32% 88%;
+    --ring: 201 96% 32%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --background: 222 47% 7%;
+    --foreground: 213 31% 91%;
+    --card: 222 47% 10%;
+    --card-foreground: 213 31% 91%;
+    --primary: 190 95% 42%;
+    --primary-foreground: 222 47% 7%;
+    --secondary: 217 33% 16%;
+    --secondary-foreground: 213 31% 91%;
+    --muted: 217 33% 15%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 166 76% 43%;
+    --accent-foreground: 222 47% 7%;
+    --destructive: 0 73% 58%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 217 33% 18%;
+    --input: 217 33% 18%;
+    --ring: 190 95% 42%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply min-h-screen bg-background text-foreground antialiased;
+    font-feature-settings: "tnum";
+  }
+}
+
+@layer components {
+  .surface-band {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.92)),
+      radial-gradient(circle at 20% 0%, rgba(14, 116, 144, 0.12), transparent 28%),
+      radial-gradient(circle at 85% 10%, rgba(15, 118, 110, 0.10), transparent 24%);
+  }
+
+  .dark .surface-band {
+    background:
+      linear-gradient(180deg, rgba(2, 6, 23, 0.96), rgba(15, 23, 42, 0.96)),
+      radial-gradient(circle at 18% 0%, rgba(8, 145, 178, 0.16), transparent 30%),
+      radial-gradient(circle at 88% 12%, rgba(20, 184, 166, 0.12), transparent 26%);
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
